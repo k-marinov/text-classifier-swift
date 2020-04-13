@@ -40,9 +40,9 @@ class TextClassifier {
     private func trainModel(positiveSamples: [String], negativeSamples: [String]) {
         positiveWords = positiveSamples
             .flatMap { $0.tokenized }
-            .reduce([String: Double](), { (dictionary, word) -> [String: Double] in
+            .reduce([String: Double](), { (dictionary, word) in
                 var newDictionary = dictionary
-                let count = newDictionary[word] ?? 1.0
+                let count = newDictionary[word] ?? 0
                 newDictionary[word] = count + 1.0
                 return newDictionary
             })
@@ -51,9 +51,9 @@ class TextClassifier {
 
         negativeWords = negativeSamples
             .flatMap { $0.tokenized }
-            .reduce([String: Double](), { (dictionary, word) -> [String: Double] in
+            .reduce([String: Double](), { (dictionary, word) in
                 var newDictionary = dictionary
-                let count = newDictionary[word] ?? 1.0
+                let count = newDictionary[word] ?? 0
                 newDictionary[word] = count + 1.0
                 return newDictionary
             })
@@ -65,9 +65,9 @@ class TextClassifier {
         let array = positiveWords.keys.compactMap { $0 } + negativeWords.keys.compactMap { $0 }
         let allWords: Set<String> = Set<String>(array)
 
-        // smallAlpha with 1.16395 returns 1.0 per each word
+        // smallAlpha with 0.58197 returns 1.0 per each word
         // smallAlpha with 0.0000000041223008 returns 20.0 per each word.
-        let smallAlpha: Double = 1.16395
+        let smallAlpha: Double = 0.58197
         allWords.forEach { word in
             let existingPositiveWordPoint: Double = positiveWords[word] ?? 0
             let existingNegativeWordPoint: Double = negativeWords[word] ?? 0
